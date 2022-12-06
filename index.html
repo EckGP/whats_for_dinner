@@ -1,1 +1,41 @@
-Hwllo World!
+<html>
+  <head>
+    <title>Food Finder</title>
+  </head>
+  <body>
+    <h1>Food Finder</h1>
+    <p>Welcome to Food Finder! Please select a food category:</p>
+    <form>
+      <input type="radio" name="food_category" value="italian">Italian<br>
+      <input type="radio" name="food_category" value="japanese">Japanese<br>
+    </form>
+    <button onclick="findRestaurants()">Find Restaurants</button>
+    <div id="restaurant_list"></div>
+  </body>
+  <script>
+    function findRestaurants() {
+      // Get the selected food category
+      const foodCategory = document.querySelector('input[name="food_category"]:checked').value;
+
+      // Use the Yelp API to search for restaurants that match the selected food category
+      // and show the results on the page
+      const yelpAPIKey = "YOUR_YELP_API_KEY";
+      const yelpAPIEndpoint = "https://api.yelp.com/v3/businesses/search?term=food&location=your_location&categories=" + foodCategory;
+      fetch(yelpAPIEndpoint, {
+        headers: {
+          Authorization: "Bearer " + yelpAPIKey
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Show the list of restaurants on the page
+          const restaurantList = document.getElementById("restaurant_list");
+          restaurantList.innerHTML = "";
+          for (let i = 0; i < data.businesses.length; i++) {
+            const restaurant = data.businesses[i];
+            restaurantList.innerHTML += "<p>" + restaurant.name + "</p>";
+          }
+        });
+    }
+  </script>
+</html>
