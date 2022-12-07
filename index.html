@@ -1,41 +1,86 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Food Finder</title>
+    <style>
+      .image-container {
+        display: flex;
+        justify-content: space-between;
+        width: 200px;
+      }
+      img {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <h1>Food Finder</h1>
-    <p>Welcome to Food Finder! Please select a food category:</p>
-    <form>
-      <input type="radio" name="food_category" value="italian">Italian<br>
-      <input type="radio" name="food_category" value="japanese">Japanese<br>
-    </form>
-    <button onclick="findRestaurants()">Find Restaurants</button>
-    <div id="restaurant_list"></div>
-  </body>
-  <script>
-    function findRestaurants() {
-      // Get the selected food category
-      const foodCategory = document.querySelector('input[name="food_category"]:checked').value;
+    <div class="image-container">
+      <img src="image1.jpg" onclick="chooseImage(this)">
+      <img src="image2.jpg" onclick="chooseImage(this)">
+    </div>
 
-      // Use the Yelp API to search for restaurants that match the selected food category
-      // and show the results on the page
-      const yelpAPIKey = "DwZoS7x2YKxUvoIJZmS1nhet6tvlbI2eRUarmK3OsHOGKD6eTFLPPRYX65G_u_u_61w6EayuHVUUJ7uzZ_uJDl4zdF-roU2Lg7JUelsV8Xve3Cfgonw0J8WQkrWPY3Yx";
-      const yelpAPIEndpoint = "https://api.yelp.com/v3/businesses/search?term=food&location=your_location&categories=" + foodCategory;
-      fetch(yelpAPIEndpoint, {
-        headers: {
-          Authorization: "Bearer " + yelpAPIKey
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Show the list of restaurants on the page
-          const restaurantList = document.getElementById("restaurant_list");
-          restaurantList.innerHTML = "";
-          for (let i = 0; i < data.businesses.length; i++) {
-            const restaurant = data.businesses[i];
-            restaurantList.innerHTML += "<p>" + restaurant.name + "</p>";
+    <div>
+        <button onclick="showRestaurants()">Show Restaurants</button>
+    </div>
+
+    <script>
+        function showRestaurants() {
+            // Get the user's current location
+            navigator.geolocation.getCurrentPosition(function(position) {
+              // Use the user's location to search for nearby restaurants
+              var latitude = position.coords.latitude;
+              var longitude = position.coords.longitude;
+              var location = new google.maps.LatLng(latitude, longitude);
+              var request = {
+                location: location,
+                radius: '500',  // Search within 500 meters
+                type: ['restaurant']
+              };
+              var service = new google.maps.places.PlacesService(document.createElement('div'));
+              service.nearbySearch(request, function(results, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  // Display the results on the website
+                  var list = document.createElement('ul');
+                  for (var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    var item = document.createElement('li');
+                    item.innerHTML = result.name;
+                    list.appendChild(item);
+                  }
+                  document.body.appendChild(list);
+                }
+              });
+            });
           }
-        });
-    }
-  </script>
+        </script>
+
+    <script>
+      function chooseImage(chosenImage) {
+        // Get the container element that contains the chosen image
+        var container = chosenImage.parentElement;
+
+        // Replace the non-chosen image with a new image
+        var nonChosenImage = container.children[0] === chosenImage ? container.children[1] : container.children[0];
+        nonChosenImage.src = "newImage.jpg";
+      }
+    </script>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
