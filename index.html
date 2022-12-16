@@ -1,87 +1,51 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="stylesheet.css">
     <style>
-      .image-container {
+      .button-container {
         display: flex;
-        justify-content: space-between;
-        width: 200px;
+        justify-content: center;
       }
-      img {
-        width: 100px;
-        height: 100px;
+      .food-button {
+        width: 200px;
+        height: 50px;
+        background-color: blue;
+        color: white;
+        font-size: 20px;
+        border: none;
         cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <div class="image-container">
-      <img src="image1.jpg" onclick="chooseImage(this)">
-      <img src="image2.jpg" onclick="chooseImage(this)">
+    <div class="button-container">
+      <button class="food-button" id="button1">Japanese</button>
+      <button class="food-button" id="button2">Mexican</button>
     </div>
-
-    <div>
-        <button onclick="showRestaurants()">Show Restaurants</button>
-    </div>
-
     <script>
-        function showRestaurants() {
-            // Get the user's current location
-            navigator.geolocation.getCurrentPosition(function(position) {
-              // Use the user's location to search for nearby restaurants
-              var latitude = position.coords.latitude;
-              var longitude = position.coords.longitude;
-              var location = new google.maps.LatLng(latitude, longitude);
-              var request = {
-                location: location,
-                radius: '500',  // Search within 500 meters
-                type: ['restaurant']
-              };
-              var service = new google.maps.places.PlacesService(document.createElement('div'));
-              service.nearbySearch(request, function(results, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                  // Display the results on the website
-                  var list = document.createElement('ul');
-                  for (var i = 0; i < results.length; i++) {
-                    var result = results[i];
-                    var item = document.createElement('li');
-                    item.innerHTML = result.name;
-                    list.appendChild(item);
-                  }
-                  document.body.appendChild(list);
-                }
-              });
-            });
-          }
-        </script>
-
+      const categories = ["Chinese", "Pizza", "Burgers", "Indian", "Vegan"];
+      let currentCategory = 0;
+      const button1 = document.getElementById("button1");
+      const button2 = document.getElementById("button2");
+      button1.addEventListener("click", function() {
+        button2.innerHTML = categories[currentCategory];
+        currentCategory = (currentCategory + 1) % categories.length;
+      });
+      button2.addEventListener("click", function() {
+        button1.innerHTML = categories[currentCategory];
+        currentCategory = (currentCategory + 1) % categories.length;
+      });
+    </script>
+    
     <script>
-      function chooseImage(chosenImage) {
-        // Get the container element that contains the chosen image
-        var container = chosenImage.parentElement;
-
-        // Replace the non-chosen image with a new image
-        var nonChosenImage = container.children[0] === chosenImage ? container.children[1] : container.children[0];
-        nonChosenImage.src = "newImage.jpg";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+    // do something with the position
+        }, function() {
+    // handle error
+        });
+      } else {
+  // prompt for zip code
       }
     </script>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
