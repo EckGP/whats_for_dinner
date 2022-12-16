@@ -18,35 +18,63 @@
   </head>
   <body>
     <div class="button-container">
-      <button class="food-button" id="button1">Japanese</button>
-      <button class="food-button" id="button2">Mexican</button>
+      <button class="food-button" id="button1"></button>
+      <button class="food-button" id="button2"></button>
     </div>
     <script>
-      const categories = ["Chinese", "Pizza", "Burgers", "Indian", "Vegan"];
-      let currentCategory = 0;
+      const categories = ['Chinese', 'Sushi', 'Ramen', 'Taco Bell', 'Burgers', 'Wings', 'Pizza'];
+      let currentCategoryIndex = 0;
       const button1 = document.getElementById("button1");
       const button2 = document.getElementById("button2");
+      button1.innerHTML = categories[currentCategoryIndex];
+      button2.innerHTML = categories[currentCategoryIndex + 1];
+      
+      let clickCount = 0;
+      let currentCategory = '';
+
       button1.addEventListener("click", function() {
-        button2.innerHTML = categories[currentCategory];
-        currentCategory = (currentCategory + 1) % categories.length;
+        const buttonText = this.innerHTML;
+        if (buttonText === currentCategory) {
+          clickCount++;
+          if (clickCount === 3) {
+            const result = prompt(`Do you want to find restaurants that serve ${buttonText} food?`);
+            if (result === 'yes') {
+              const zipCode = prompt('Please enter your zip code:');
+              // use zip code to search for restaurants
+            }
+            clickCount = 0;
+          }
+        } else {
+          currentCategory = buttonText;
+          clickCount = 1;
+        }
+        currentCategoryIndex = (currentCategoryIndex + 2) % categories.length;
+        button1.innerHTML = categories[currentCategoryIndex];
+        button2.innerHTML = categories[(currentCategoryIndex + 1) % categories.length];
       });
       button2.addEventListener("click", function() {
-        button1.innerHTML = categories[currentCategory];
-        currentCategory = (currentCategory + 1) % categories.length;
+        const buttonText = this.innerHTML;
+        if (buttonText === currentCategory) {
+          clickCount++;
+          if (clickCount === 3) {
+            const result = prompt(`Do you want to find restaurants that serve ${buttonText} food?`);
+            if (result === 'yes') {
+              const zipCode = prompt('Please enter your zip code:');
+              // use zip code to search for restaurants
+            }
+            clickCount = 0;
+          }
+        } else {
+          currentCategory = buttonText;
+          clickCount = 1;
+        }
+        currentCategoryIndex = (currentCategoryIndex + 1) % categories.length;
+        button1.innerHTML = categories[currentCategoryIndex];
+        button2.innerHTML = categories[(currentCategoryIndex + 1) % categories.length];
       });
     </script>
-    
-    <script>
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-    // do something with the position
-        }, function() {
-    // handle error
-        });
-      } else {
-  // prompt for zip code
-      }
-    </script>
+
+
     
     <script>
       const API_KEY = 'YOUR_API_KEY';
